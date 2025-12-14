@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Master | Daily Updated Quizzes</title>
+    <meta name="description" content="Quiz Master - Test your knowledge with daily updated quizzes. 10 questions per quiz, 15 seconds per question.">
+    <meta name="keywords" content="quiz, trivia, daily quiz, knowledge test, online quiz, science quiz, technology quiz, history quiz">
+    <meta name="author" content="Quiz Master">
+    
+    <!-- AdSense Meta Tag -->
+    <meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Quiz Master | Daily Updated Quizzes">
+    <meta property="og:description" content="Test your knowledge with daily updated quizzes. 10 questions per quiz, 15 seconds per question.">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em% font-size=%2290%22>❓</text></svg>">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #0a0e17;
+            --secondary: #1a1f2e;
+            --accent: #00d4ff;
+            --accent-glow: rgba(0, 212, 255, 0.5);
+            --text: #ffffff;
+            --text-secondary: #b0b7c3;
+            --card-bg: rgba(26, 31, 46, 0.8);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 100, 255, 0.05) 0%, transparent 20%);
+        }
+        
+        /* Floating Buttons */
+        .floating-btn {
+            position: fixed;
+            z-index: 1000;
+            border: none;
+            background: var(--card-bg);
+            color: var(--accent);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 
+                        0 0 20px var(--accent-glow);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4), 
+                        0 0 30px var(--accent-glow);
+        }
+        
+        .floating-btn i {
+            font-size: 24px;
+        }
+        
+        /* Floating Button Positions */
+        .menu-btn {
+            top: 30px;
+            left: 30px;
+        }
+        
+        .user-btn {
+            top: 30px;
+            right: 30px;
+        }
+        
+        .sound-btn {
+            bottom: 30px;
+            right: 30px;
+        }
+        
+        .help-btn {
+            bottom: 30px;
+            left: 30px;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: 120px 20px 60px;
+            position: relative;
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #00d4ff, #0088ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        /* Quiz Categories */
+        .categories {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--text);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff, #0088ff);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        
+        .category-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .category-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #00d4ff, #0088ff);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 
+                        0 0 30px rgba(0, 212, 255, 0.1);
+        }
+        
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: var(--accent);
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+        
+        .category-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-count {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* Start Quiz Button */
+        .start-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #00d4ff, #0088ff);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 15px;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        /* Quiz Container */
+        .quiz-container {
+            display: none;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .quiz-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .quiz-header {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .quiz-title {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+        
+        .quiz-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        
+        .info-item i {
+            color: var(--accent);
+        }
+        
+        /* Question Timer */
+        .question-timer {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent), #0088ff);
+            border-radius: 3px;
+            transition: width 1s linear;
+        }
+        
+        .timer-text {
+            text-align: center;
+            color: var(--accent);
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        
+        /* Question Container */
+        .question-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+        
+        .question-number {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .option-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            color: var(--text);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+        }
+        
+        .option-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .option-btn.selected {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+        
+        .option-btn.correct {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: var(--success);
+        }
+        
+        .option-btn.wrong {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: var(--danger);
+        }
+        
+        /* Score Card */
+        .score-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            text-align: center;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .score-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        
+        .score-title {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .score-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            background: linear-gradient(90deg, #00d4ff, #0088ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .score-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .score-detail {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+        
+        .detail-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* User Profile */
+        .profile-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .profile-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--accent);
+            border: 3px solid var(--accent);
+            overflow: hidden;
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-info h2 {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .profile-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--text);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.1);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        /* Login/Signup Modal */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-modal.active {
+            display: flex;
+        }
+        
+        .auth-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 450px;
+            padding: 40px;
+            position: relative;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .auth-tab.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: rgba(10, 14, 23, 0.9);
+            padding: 60px 20px 30px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        
+        .footer-section p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .floating-btn {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .floating-btn i {
+                font-size: 20px;
+            }
+            
+            .menu-btn, .user-btn {
+                top: 20px;
+            }
+            
+            .menu-btn {
+                left: 20px;
+            }
+            
+            .user-btn {
+                right: 20px;
+            }
+            
+            .sound-btn, .help-btn {
+                bottom: 20px;
+            }
+            
+            .sound-btn {
+                right: 20px;
+            }
+            
+            .help-btn {
+                left: 20px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .score-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* Animation for floating elements */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .floating-animation {
+            animation: float 5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Buttons -->
+    <button class="floating-btn menu-btn" id="menuBtn" aria-label="Open menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <button class="floating-btn user-btn" id="userBtn" aria-label="User account">
+        <i class="fas fa-user"></i>
+    </button>
+    
+    <button class="floating-btn sound-btn" id="soundBtn" aria-label="Toggle sound">
+        <i class="fas fa-volume-up"></i>
+    </button>
+    
+    <button class="floating-btn help-btn" id="helpBtn" aria-label="Get help">
+        <i class="fas fa-question-circle"></i>
+    </button>
+    
+    <!-- Login/Signup Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab">Login</button>
+                <button class="auth-tab" id="signupTab">Sign Up</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password">
+                </div>
+                
+                <button class="start-btn" id="loginBtn">Login</button>
+                
+                <p style="text-align: center; margin-top: 20px; color: var(--text-secondary);">
+                    Don't have an account? <a href="#" id="switchToSignup" style="color: var(--accent);">Sign Up</a>
+                </p>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" class="form-control" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" class="form-control" placeholder="Create a password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password">
+                </div>
+                
+                <button class="start-btn" id="signupBtn">Create Account</button>
+                
+                <p style="text-align: center; margin-top: 20px; color: var(--text-secondary);">
+                    Already have an account? <a href="#" id="switchToLogin" style="color: var(--accent);">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Container -->
+    <div class="profile-container" id="profileContainer">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-info">
+                    <h2 id="userName">Guest User</h2>
+                    <p id="userEmail">Not logged in</p>
+                </div>
+            </div>
+            
+            <div class="profile-form">
+                <div class="form-group">
+                    <label for="profileName">Full Name</label>
+                    <input type="text" id="profileName" class="form-control" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileAge">Age</label>
+                    <input type="number" id="profileAge" class="form-control" placeholder="Enter your age" min="13" max="100">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileGender">Gender</label>
+                    <select id="profileGender" class="form-select">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileCountry">Country</label>
+                    <input type="text" id="profileCountry" class="form-control" placeholder="Enter your country">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileState">State</label>
+                    <input type="text" id="profileState" class="form-control" placeholder="Enter your state">
+                </div>
+                
+                <div class="form-group">
+                    <label for="profileDistrict">District</label>
+                    <input type="text" id="profileDistrict" class="form-control" placeholder="Enter your district">
+                </div>
+            </div>
+            
+            <button class="start-btn" id="saveProfileBtn" style="margin-top: 30px;">Save Profile</button>
+            <button class="start-btn" id="logoutBtn" style="margin-top: 15px; background: var(--danger);">Logout</button>
+        </div>
+    </div>
+    
+    <!-- Quiz Container -->
+    <div class="quiz-container" id="quizContainer">
+        <div class="quiz-header">
+            <h2 class="quiz-title" id="currentQuizTitle">Science Quiz</h2>
+            <div class="quiz-info">
+                <div class="info-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span id="questionCounter">Question 1/10</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="timerText">15s</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-star"></i>
+                    <span id="scoreCounter">Score: 0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="question-timer">
+            <div class="timer-bar" id="timerBar"></div>
+        </div>
+        
+        <div class="question-container">
+            <span class="question-number" id="questionNumber">Question 1</span>
+            <h3 class="question-text" id="questionText">Loading question...</h3>
+            
+            <div class="options-grid" id="optionsContainer">
+                <!-- Options will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Score Card -->
+    <div class="quiz-container" id="scoreContainer" style="display: none;">
+        <div class="score-card">
+            <div class="score-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 class="score-title">Quiz Completed!</h2>
+            <div class="score-value" id="finalScore">8/10</div>
+            
+            <div class="score-details">
+                <div class="score-detail">
+                    <div class="detail-value" id="correctAnswers">8</div>
+                    <div class="detail-label">Correct</div>
+                </div>
+                <div class="score-detail">
+                    <div class="detail-value" id="wrongAnswers">2</div>
+                    <div class="detail-label">Wrong</div>
+                </div>
+                <div class="score-detail">
+                    <div class="detail-value" id="timeTaken">2:30</div>
+                    <div class="detail-label">Time Taken</div>
+                </div>
+            </div>
+            
+            <button class="start-btn" id="playAgainBtn" style="margin: 20px 0 10px;">Play Again</button>
+            <button class="start-btn" id="backToHomeBtn" style="background: rgba(255, 255, 255, 0.1);">Back to Home</button>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div id="mainContent">
+        <!-- Header Section -->
+        <header>
+            <div class="header-content">
+                <div class="logo floating-animation">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h1>Quiz Master</h1>
+                <p class="tagline">Daily updated quizzes! 10 questions per quiz, 15 seconds per question. Test your knowledge and improve every day!</p>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
+                    <div style="background: rgba(0, 212, 255, 0.1); padding: 10px 20px; border-radius: 20px;">
+                        <i class="fas fa-sync-alt"></i> Daily Updates
+                    </div>
+                    <div style="background: rgba(0, 212, 255, 0.1); padding: 10px 20px; border-radius: 20px;">
+                        <i class="fas fa-clock"></i> 15s per Question
+                    </div>
+                    <div style="background: rgba(0, 212, 255, 0.1); padding: 10px 20px; border-radius: 20px;">
+                        <i class="fas fa-chart-line"></i> Track Progress
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Quiz Categories Section -->
+        <section class="categories">
+            <h2 class="section-title">Daily Updated Quizzes</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Our questions are updated daily to keep you challenged and learning. Each quiz has 10 questions with 15 seconds per question.
+            </p>
+            
+            <div class="category-grid">
+                <!-- Science Quiz -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <h3 class="category-title">Science</h3>
+                    <p class="category-description">Daily updated science questions covering physics, chemistry, biology, and astronomy. New questions every day!</p>
+                    <span class="quiz-count">Updated Daily</span>
+                    <button class="start-btn" data-category="science">Start Science Quiz</button>
+                </div>
+                
+                <!-- Technology Quiz -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3 class="category-title">Technology</h3>
+                    <p class="category-description">Latest tech questions updated daily. Programming, AI, gadgets, and emerging technologies.</p>
+                    <span class="quiz-count">Updated Daily</span>
+                    <button class="start-btn" data-category="technology">Start Technology Quiz</button>
+                </div>
+                
+                <!-- History Quiz -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <h3 class="category-title">History</h3>
+                    <p class="category-description">Daily history questions from ancient civilizations to modern events. Learn something new every day!</p>
+                    <span class="quiz-count">Updated Daily</span>
+                    <button class="start-btn" data-category="history">Start History Quiz</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quiz Master</h3>
+                    <p>Daily updated quizzes with 10 questions each and 15 seconds per question. Test your knowledge and improve every day!</p>
+                    <p>Email: <a href="mailto:quizmaster023@gmail.com" style="color: var(--accent);">quizmaster023@gmail.com</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" id="privacyLink">Privacy Policy</a></li>
+                        <li><a href="#" id="termsLink">Terms of Service</a></li>
+                        <li><a href="#" id="contactLink">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div style="display: flex; gap: 15px; margin-top: 15px;">
+                        <a href="#" style="color: var(--accent); font-size: 1.5rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: var(--accent); font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: var(--accent); font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color: var(--accent); font-size: 1.5rem;"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Quiz Master. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Legal Pages (Hidden) -->
+    <div class="profile-container" id="privacyContainer" style="display: none;">
+        <div class="profile-card">
+            <a href="#" class="back-home" onclick="showPage('mainContent')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            <h2 style="color: var(--accent); margin-bottom: 20px;">Privacy Policy</h2>
+            <div style="color: var(--text-secondary); line-height: 1.6;">
+                <p><strong>Last Updated: December 2023</strong></p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">1. Information We Collect</h3>
+                <p>When you register on Quiz Master, we collect:</p>
+                <ul style="margin: 10px 0 20px 20px;">
+                    <li>Your name and email address</li>
+                    <li>Profile information (age, gender, location)</li>
+                    <li>Quiz scores and progress data</li>
+                    <li>Device and browser information</li>
+                </ul>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">2. How We Use Your Information</h3>
+                <p>We use your information to:</p>
+                <ul style="margin: 10px 0 20px 20px;">
+                    <li>Provide and personalize the quiz experience</li>
+                    <li>Track your progress and scores</li>
+                    <li>Improve our services</li>
+                    <li>Send important updates (optional)</li>
+                </ul>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">3. Data Security</h3>
+                <p>We implement industry-standard security measures to protect your personal information. However, no method of transmission over the internet is 100% secure.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">4. Cookies</h3>
+                <p>We use cookies to enhance your experience, remember your preferences, and track quiz progress. You can disable cookies in your browser settings.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">5. Third-Party Services</h3>
+                <p>We use Google AdSense to display ads. Google may use cookies to serve personalized ads based on your browsing history.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">6. Your Rights</h3>
+                <p>You have the right to:</p>
+                <ul style="margin: 10px 0 20px 20px;">
+                    <li>Access your personal data</li>
+                    <li>Correct inaccurate data</li>
+                    <li>Request deletion of your data</li>
+                    <li>Opt-out of marketing communications</li>
+                </ul>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">7. Children's Privacy</h3>
+                <p>Quiz Master is not intended for children under 13. We do not knowingly collect personal information from children under 13.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">8. Contact Us</h3>
+                <p>For privacy-related questions, contact us at: <a href="mailto:quizmaster023@gmail.com" style="color: var(--accent);">quizmaster023@gmail.com</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="profile-container" id="termsContainer" style="display: none;">
+        <div class="profile-card">
+            <a href="#" class="back-home" onclick="showPage('mainContent')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            <h2 style="color: var(--accent); margin-bottom: 20px;">Terms of Service</h2>
+            <div style="color: var(--text-secondary); line-height: 1.6;">
+                <p><strong>Last Updated: December 2023</strong></p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">1. Acceptance of Terms</h3>
+                <p>By accessing and using Quiz Master, you accept and agree to be bound by these Terms of Service.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">2. User Accounts</h3>
+                <p>You must provide accurate information when creating an account. You are responsible for maintaining the confidentiality of your account credentials.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">3. Acceptable Use</h3>
+                <p>You agree not to:</p>
+                <ul style="margin: 10px 0 20px 20px;">
+                    <li>Use the service for any illegal purpose</li>
+                    <li>Attempt to hack or disrupt the service</li>
+                    <li>Share inappropriate content</li>
+                    <li>Create multiple accounts to manipulate scores</li>
+                </ul>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">4. Intellectual Property</h3>
+                <p>All quiz content, design, and code are the property of Quiz Master. You may not copy, distribute, or create derivative works without permission.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">5. Limitation of Liability</h3>
+                <p>Quiz Master is provided "as is" without warranties. We are not liable for any damages arising from your use of the service.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">6. Termination</h3>
+                <p>We reserve the right to terminate or suspend your account for violating these terms.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">7. Changes to Terms</h3>
+                <p>We may update these terms at any time. Continued use of the service constitutes acceptance of the updated terms.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">8. Governing Law</h3>
+                <p>These terms are governed by the laws of India.</p>
+                
+                <h3 style="color: var(--text); margin: 20px 0 10px;">9. Contact</h3>
+                <p>For questions about these terms, contact: <a href="mailto:quizmaster023@gmail.com" style="color: var(--accent);">quizmaster023@gmail.com</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Daily Quiz Questions - Auto updates daily
+        const dailyQuizzes = {
+            science: getDailyQuestions('science'),
+            technology: getDailyQuestions('technology'),
+            history: getDailyQuestions('history')
+        };
+
+        // Get daily questions based on date
+        function getDailyQuestions(category) {
+            const date = new Date();
+            const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+            
+            // Seed for daily variation
+            const seed = dayOfYear * category.length;
+            
+            const allQuestions = {
+                science: [
+                    { question: "What is the chemical symbol for Gold?", options: ["Go", "Gd", "Au", "Ag"], answer: 2 },
+                    { question: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], answer: 1 },
+                    { question: "What is the powerhouse of the cell?", options: ["Nucleus", "Ribosome", "Mitochondria", "Endoplasmic Reticulum"], answer: 2 },
+                    { question: "Which gas do plants absorb during photosynthesis?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], answer: 1 },
+                    { question: "What is the hardest natural substance on Earth?", options: ["Gold", "Iron", "Diamond", "Platinum"], answer: 2 },
+                    { question: "What is the atomic number of Carbon?", options: ["6", "12", "14", "8"], answer: 0 },
+                    { question: "Which planet has the most moons?", options: ["Jupiter", "Saturn", "Uranus", "Neptune"], answer: 1 },
+                    { question: "What is the speed of light?", options: ["299,792 km/s", "150,000 km/s", "1,080 km/h", "300,000 m/s"], answer: 0 },
+                    { question: "What is the most abundant gas in Earth's atmosphere?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], answer: 2 },
+                    { question: "Which element has the chemical symbol 'Na'?", options: ["Neon", "Nickel", "Sodium", "Nitrogen"], answer: 2 }
+                ],
+                technology: [
+                    { question: "What does CPU stand for?", options: ["Central Processing Unit", "Computer Personal Unit", "Central Processor Unit", "Computer Processing Unit"], answer: 0 },
+                    { question: "Which company developed the Windows operating system?", options: ["Apple", "Microsoft", "Google", "IBM"], answer: 1 },
+                    { question: "What does HTML stand for?", options: ["Hyper Text Markup Language", "High Tech Modern Language", "Hyper Transfer Markup Language", "Home Tool Markup Language"], answer: 0 },
+                    { question: "Which programming language is known as the language of the web?", options: ["Python", "Java", "JavaScript", "C++"], answer: 2 },
+                    { question: "What does VPN stand for?", options: ["Virtual Private Network", "Very Protected Network", "Virtual Public Network", "Verified Private Network"], answer: 0 },
+                    { question: "What year was the first iPhone released?", options: ["2005", "2007", "2008", "2010"], answer: 1 },
+                    { question: "What does 'HTTP' stand for?", options: ["HyperText Transfer Protocol", "High Transfer Text Protocol", "Hyper Transfer Text Protocol", "High Text Transfer Protocol"], answer: 0 },
+                    { question: "Which company created the Android operating system?", options: ["Apple", "Microsoft", "Google", "Samsung"], answer: 2 },
+                    { question: "What does 'AI' stand for?", options: ["Automated Intelligence", "Artificial Intelligence", "Advanced Interface", "Automated Interface"], answer: 1 },
+                    { question: "What is the most popular programming language in 2023?", options: ["Python", "JavaScript", "Java", "C++"], answer: 0 }
+                ],
+                history: [
+                    { question: "Who was the first President of the United States?", options: ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"], answer: 2 },
+                    { question: "In which year did World War II end?", options: ["1943", "1944", "1945", "1946"], answer: 2 },
+                    { question: "Who discovered America?", options: ["Christopher Columbus", "Vasco da Gama", "Marco Polo", "Ferdinand Magellan"], answer: 0 },
+                    { question: "Which ancient civilization built the pyramids?", options: ["Greeks", "Romans", "Egyptians", "Mayans"], answer: 2 },
+                    { question: "Who was the first man to walk on the moon?", options: ["Buzz Aldrin", "Neil Armstrong", "Yuri Gagarin", "Michael Collins"], answer: 1 },
+                    { question: "When did India gain independence?", options: ["1945", "1947", "1950", "1942"], answer: 1 },
+                    { question: "Who wrote the Indian National Anthem?", options: ["Rabindranath Tagore", "Bankim Chandra Chatterjee", "Sarojini Naidu", "Mahatma Gandhi"], answer: 0 },
+                    { question: "Which empire built the Taj Mahal?", options: ["Mughal Empire", "British Empire", "Maratha Empire", "Gupta Empire"], answer: 0 },
+                    { question: "Who was the first Prime Minister of India?", options: ["Mahatma Gandhi", "Jawaharlal Nehru", "Sardar Patel", "Indira Gandhi"], answer: 1 },
+                    { question: "When was the United Nations founded?", options: ["1942", "1945", "1950", "1948"], answer: 1 }
+                ]
+            };
+
+            // Select 10 random questions for today
+            const questions = allQuestions[category];
+            const selectedQuestions = [];
+            const usedIndices = new Set();
+
+            // Use seed for daily consistency
+            for (let i = 0; i < 10; i++) {
+                let index;
+                do {
+                    index = (seed + i * 7) % questions.length;
+                    index = (index + i * 3) % questions.length;
+                } while (usedIndices.has(index));
+                
+                usedIndices.add(index);
+                selectedQuestions.push(questions[index]);
+            }
+
+            return {
+                title: `${category.charAt(0).toUpperCase() + category.slice(1)} Quiz`,
+                description: `Daily ${category} quiz`,
+                date: date.toDateString(),
+                questions: selectedQuestions
+            };
+        }
+
+        // App State
+        let currentCategory = '';
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let score = 0;
+        let questionTimer;
+        let timeLeft = 15;
+        let quizStartTime;
+        let currentUser = null;
+
+        // DOM Elements
+        const mainContent = document.getElementById('mainContent');
+        const quizContainer = document.getElementById('quizContainer');
+        const scoreContainer = document.getElementById('scoreContainer');
+        const profileContainer = document.getElementById('profileContainer');
+        const authModal = document.getElementById('authModal');
+        const userBtn = document.getElementById('userBtn');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const questionCounter = document.getElementById('questionCounter');
+        const scoreCounter = document.getElementById('scoreCounter');
+        const timerText = document.getElementById('timerText');
+        const timerBar = document.getElementById('timerBar');
+        const finalScore = document.getElementById('finalScore');
+        const correctAnswers = document.getElementById('correctAnswers');
+        const wrongAnswers = document.getElementById('wrongAnswers');
+        const timeTaken = document.getElementById('timeTaken');
+        const privacyContainer = document.getElementById('privacyContainer');
+        const termsContainer = document.getElementById('termsContainer');
+
+        // Initialize user data
+        function initUserData() {
+            const savedUser = localStorage.getItem('quizMasterUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUserDisplay();
+            }
+        }
+
+        // Update user display
+        function updateUserDisplay() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name || 'Guest User';
+                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('profileName').value = currentUser.name || '';
+                document.getElementById('profileAge').value = currentUser.age || '';
+                document.getElementById('profileGender').value = currentUser.gender || '';
+                document.getElementById('profileCountry').value = currentUser.country || '';
+                document.getElementById('profileState').value = currentUser.state || '';
+                document.getElementById('profileDistrict').value = currentUser.district || '';
+                
+                // Update avatar
+                const avatar = document.getElementById('userAvatar');
+                if (currentUser.avatar) {
+                    avatar.innerHTML = `<img src="${currentUser.avatar}" alt="Profile">`;
+                } else {
+                    avatar.innerHTML = `<i class="fas fa-user"></i>`;
+                }
+            }
+        }
+
+        // Start quiz
+        document.querySelectorAll('.start-btn[data-category]').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!currentUser) {
+                    showNotification('Please login to start quiz');
+                    authModal.classList.add('active');
+                    return;
+                }
+                
+                currentCategory = this.getAttribute('data-category');
+                startQuiz();
+            });
+        });
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = new Array(10).fill(null);
+            quizStartTime = Date.now();
+            
+            showPage('quizContainer');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const quiz = dailyQuizzes[currentCategory];
+            const question = quiz.questions[currentQuestionIndex];
+            
+            // Update counters
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1}/10`;
+            scoreCounter.textContent = `Score: ${score}`;
+            
+            // Update question
+            questionText.textContent = question.question;
+            
+            // Clear and add options
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.addEventListener('click', () => selectAnswer(index));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Start timer
+            startQuestionTimer();
+        }
+
+        function startQuestionTimer() {
+            timeLeft = 15;
+            updateTimerDisplay();
+            
+            if (questionTimer) clearInterval(questionTimer);
+            
+            questionTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(questionTimer);
+                    handleTimeUp();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            timerText.textContent = `${timeLeft}s`;
+            const percentage = (timeLeft / 15) * 100;
+            timerBar.style.width = `${percentage}%`;
+            
+            // Change color based on time
+            if (timeLeft <= 5) {
+                timerBar.style.background = 'linear-gradient(90deg, #ff4757, #ff3838)';
+                timerText.style.color = '#ff4757';
+            } else if (timeLeft <= 10) {
+                timerBar.style.background = 'linear-gradient(90deg, #ffa502, #ff7f00)';
+                timerText.style.color = '#ffa502';
+            } else {
+                timerBar.style.background = 'linear-gradient(90deg, var(--accent), #0088ff)';
+                timerText.style.color = 'var(--accent)';
+            }
+        }
+
+        function handleTimeUp() {
+            // Auto-select no answer (wrong)
+            userAnswers[currentQuestionIndex] = -1;
+            
+            // Show correct answer
+            const correctIndex = dailyQuizzes[currentCategory].questions[currentQuestionIndex].answer;
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons[correctIndex].classList.add('correct');
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        function selectAnswer(selectedIndex) {
+            clearInterval(questionTimer);
+            
+            const question = dailyQuizzes[currentCategory].questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            // Disable all buttons
+            buttons.forEach(btn => btn.style.pointerEvents = 'none');
+            
+            // Mark correct answer
+            buttons[question.answer].classList.add('correct');
+            
+            // Mark wrong answer if selected
+            if (selectedIndex !== question.answer) {
+                buttons[selectedIndex].classList.add('wrong');
+            }
+            
+            // Store answer and update score
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            if (selectedIndex === question.answer) {
+                score++;
+                scoreCounter.textContent = `Score: ${score}`;
+                scoreCounter.style.animation = 'pulse 0.5s';
+                setTimeout(() => scoreCounter.style.animation = '', 500);
+            }
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < 10) {
+                loadQuestion();
+            } else {
+                showScoreCard();
+            }
+        }
+
+        function showScoreCard() {
+            const timeUsed = Math.floor((Date.now() - quizStartTime) / 1000);
+            const minutes = Math.floor(timeUsed / 60);
+            const seconds = timeUsed % 60;
+            
+            // Update score card
+            finalScore.textContent = `${score}/10`;
+            correctAnswers.textContent = score;
+            wrongAnswers.textContent = 10 - score;
+            timeTaken.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Save score to user profile
+            if (currentUser) {
+                if (!currentUser.scores) currentUser.scores = {};
+                if (!currentUser.scores[currentCategory]) currentUser.scores[currentCategory] = [];
+                
+                currentUser.scores[currentCategory].push({
+                    date: new Date().toISOString(),
+                    score: score,
+                    time: timeUsed
+                });
+                
+                localStorage.setItem('quizMasterUser', JSON.stringify(currentUser));
+            }
+            
+            showPage('scoreContainer');
+        }
+
+        // Navigation
+        document.getElementById('playAgainBtn').addEventListener('click', () => {
+            startQuiz();
+        });
+
+        document.getElementById('backToHomeBtn').addEventListener('click', () => {
+            showPage('mainContent');
+        });
+
+        // User authentication
+        userBtn.addEventListener('click', () => {
+            if (currentUser) {
+                showPage('profileContainer');
+            } else {
+                authModal.classList.add('active');
+            }
+        });
+
+        // Login/Signup tabs
+        document.getElementById('loginTab').addEventListener('click', () => {
+            document.getElementById('loginTab').classList.add('active');
+            document.getElementById('signupTab').classList.remove('active');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+        });
+
+        document.getElementById('signupTab').addEventListener('click', () => {
+            document.getElementById('signupTab').classList.add('active');
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+        });
+
+        document.getElementById('switchToSignup').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signupTab').click();
+        });
+
+        document.getElementById('switchToLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('loginTab').click();
+        });
+
+        // Login functionality
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showNotification('Please fill all fields');
+                return;
+            }
+            
+            // Simple validation
+            const users = JSON.parse(localStorage.getItem('quizMasterUsers') || '{}');
+            
+            if (users[email] && users[email].password === password) {
+                currentUser = users[email];
+                localStorage.setItem('quizMasterUser', JSON.stringify(currentUser));
+                authModal.classList.remove('active');
+                showNotification('Login successful!');
+                updateUserDisplay();
+            } else {
+                showNotification('Invalid email or password');
+            }
+        });
+
+        // Signup functionality
+        document.getElementById('signupBtn').addEventListener('click', () => {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!name || !email || !password || !confirmPassword) {
+                showNotification('Please fill all fields');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters');
+                return;
+            }
+            
+            // Check if user exists
+            const users = JSON.parse(localStorage.getItem('quizMasterUsers') || '{}');
+            
+            if (users[email]) {
+                showNotification('Email already registered');
+                return;
+            }
+            
+            // Create new user
+            currentUser = {
+                name: name,
+                email: email,
+                password: password,
+                createdAt: new Date().toISOString(),
+                scores: {}
+            };
+            
+            users[email] = currentUser;
+            localStorage.setItem('quizMasterUsers', JSON.stringify(users));
+            localStorage.setItem('quizMasterUser', JSON.stringify(currentUser));
+            
+            authModal.classList.remove('active');
+            showNotification('Account created successfully!');
+            updateUserDisplay();
+        });
+
+        // Save profile
+        document.getElementById('saveProfileBtn').addEventListener('click', () => {
+            if (!currentUser) return;
+            
+            currentUser.name = document.getElementById('profileName').value;
+            currentUser.age = document.getElementById('profileAge').value;
+            currentUser.gender = document.getElementById('profileGender').value;
+            currentUser.country = document.getElementById('profileCountry').value;
+            currentUser.state = document.getElementById('profileState').value;
+            currentUser.district = document.getElementById('profileDistrict').value;
+            
+            // Update in users database
+            const users = JSON.parse(localStorage.getItem('quizMasterUsers') || '{}');
+            users[currentUser.email] = currentUser;
+            localStorage.setItem('quizMasterUsers', JSON.stringify(users));
+            localStorage.setItem('quizMasterUser', JSON.stringify(currentUser));
+            
+            showNotification('Profile saved successfully!');
+            updateUserDisplay();
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            currentUser = null;
+            localStorage.removeItem('quizMasterUser');
+            showPage('mainContent');
+            showNotification('Logged out successfully');
+        });
+
+        // Legal pages
+        document.getElementById('privacyLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('privacyContainer');
+        });
+
+        document.getElementById('termsLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showPage('termsContainer');
+        });
+
+        // Close auth modal when clicking outside
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.classList.remove('active');
+            }
+        });
+
+        // Show page function
+        function showPage(pageId) {
+            // Hide all pages
+            [mainContent, quizContainer, scoreContainer, profileContainer, privacyContainer, termsContainer].forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show selected page
+            const page = document.getElementById(pageId);
+            if (page) {
+                page.style.display = 'block';
+                if (pageId !== 'mainContent') {
+                    page.classList.add('active');
+                }
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Close auth modal if open
+            authModal.classList.remove('active');
+        }
+
+        // Notification function
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 30px;
+                background: var(--card-bg);
+                color: var(--text);
+                padding: 15px 25px;
+                border-radius: var(--border-radius);
+                border-left: 4px solid var(--accent);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                z-index: 3000;
+                max-width: 350px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                transform: translateX(400px);
+                transition: transform 0.4s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 400);
+            }, 3000);
+        }
+
+        // Sound button
+        document.getElementById('soundBtn').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-volume-up')) {
+                icon.classList.remove('fa-volume-up');
+                icon.classList.add('fa-volume-mute');
+                showNotification('Sound muted');
+            } else {
+                icon.classList.remove('fa-volume-mute');
+                icon.classList.add('fa-volume-up');
+                showNotification('Sound unmuted');
+            }
+        });
+
+        // Help button
+        document.getElementById('helpBtn').addEventListener('click', () => {
+            showNotification('Each quiz has 10 questions with 15 seconds per question. Answer quickly and accurately to get high scores!');
+        });
+
+        // Menu button
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            showNotification('Use the user button to login and access your profile');
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initUserData();
+            
+            // Update daily quiz indicator
+            const date = new Date();
+            document.querySelectorAll('.quiz-count').forEach(el => {
+                el.textContent = `Updated: ${date.toLocaleDateString()}`;
+            });
+            
+            // Add pulse animation to logo
+            const logo = document.querySelector('.logo');
+            setInterval(() => {
+                logo.classList.toggle('floating-animation');
+            }, 5000);
+            
+            // Check for daily quiz update
+            const lastUpdate = localStorage.getItem('lastQuizUpdate');
+            const today = date.toDateString();
+            
+            if (lastUpdate !== today) {
+                localStorage.setItem('lastQuizUpdate', today);
+                showNotification('New daily quizzes available!');
+            }
+        });
+
+        // SEO-friendly title update
+        window.addEventListener('blur', () => {
+            document.title = "Come back to Quiz Master!";
+        });
+        
+        window.addEventListener('focus', () => {
+            document.title = "Quiz Master | Daily Updated Quizzes";
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Number keys 1-4 for answering
+            if (e.key >= '1' && e.key <= '4' && quizContainer.style.display === 'block') {
+                const index = parseInt(e.key) - 1;
+                const buttons = document.querySelectorAll('.option-btn');
+                if (buttons[index]) {
+                    buttons[index].click();
+                }
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                authModal.classList.remove('active');
+                if (profileContainer.style.display === 'block') {
+                    showPage('mainContent');
+                }
+            }
+        });
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            .back-home {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                color: var(--accent);
+                text-decoration: none;
+                margin-bottom: 30px;
+                padding: 10px 20px;
+                border-radius: var(--border-radius);
+                background: rgba(0, 212, 255, 0.1);
+                transition: var(--transition);
+            }
+            
+            .back-home:hover {
+                background: rgba(0, 212, 255, 0.2);
+                transform: translateY(-2px);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+  </html>
